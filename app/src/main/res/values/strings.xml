@@ -16,4 +16,11 @@
 
 <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
+    <!-- Validation Message-->
+    <string name="mandatory_email">You must provide an email</string>
+    <string name="invalid_email">You must provide a valid email</string>
+    <string name="mandatory_password">You must provide a password</string>
+    <string name="invalid_password">Password length must not be less than six characters</string>
 </resources>
