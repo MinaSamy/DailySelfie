@@ -1,4 +1,4 @@
-package dailyselfie.androidbloodstone.dailyselfie;
+package bloodstone.dailyselfie.android;
 
 import org.junit.Test;
 
