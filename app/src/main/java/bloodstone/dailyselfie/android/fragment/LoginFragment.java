@@ -1,24 +1,25 @@
 package bloodstone.dailyselfie.android.fragment;
 
 import android.app.Fragment;
-import android.net.Uri;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import bloodstone.dailyselfie.android.R;
+import bloodstone.dailyselfie.android.helper.AuthenticationHelper;
+import bloodstone.dailyselfie.android.model.LoginResponse;
+import bloodstone.dailyselfie.android.utils.NetUtils;
 import bloodstone.dailyselfie.android.utils.ValidationUtils;
 
 /**
@@ -33,11 +34,10 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Tex
     // UI references.
     private AutoCompleteTextView mEmailView;
     private EditText mPasswordView;
-    private Button mLoginButton;
     private View mProgressView;
     private View mLoginFormView;
 
-    private OnFragmentInteractionListener mListener;
+    private OnLoginFragmentInteractionListener mListener;
 
     //authentication task
     private AuthenticationTask mAuthTask;
@@ -49,20 +49,14 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Tex
      */
 
     public static LoginFragment newInstance() {
-        LoginFragment fragment = new LoginFragment();
-        return fragment;
+        return new LoginFragment();
     }
 
     public LoginFragment() {
         // Required empty public constructor
     }
 
-    private Handler mErrorHandler=new Handler(Looper.getMainLooper()){
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-        }
-    };
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -79,30 +73,17 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Tex
         mEmailView = (AutoCompleteTextView) v.findViewById(R.id.email);
         mPasswordView = (EditText) v.findViewById(R.id.password);
         mPasswordView.setOnEditorActionListener(this);
-        mLoginButton = (Button) v.findViewById(R.id.sign_in_button);
+        Button mLoginButton = (Button) v.findViewById(R.id.sign_in_button);
         mLoginButton.setOnClickListener(this);
         mProgressView = v.findViewById(R.id.login_progress);
         mLoginFormView = v.findViewById(R.id.login_form);
         return v;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
 
-    /*@Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        try {
-            mListener = (OnFragmentInteractionListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }*/
+    public void setOnLoginFragmentInteractionListener(OnLoginFragmentInteractionListener listener){
+        this.mListener=listener;
+    }
 
     @Override
     public void onDetach() {
@@ -121,6 +102,9 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Tex
     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
         if (v.getId() == R.id.password) {
             if (actionId == R.id.login || actionId == EditorInfo.IME_NULL) {
+                //dismiss keyboard
+                InputMethodManager imm=(InputMethodManager)v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(v.getWindowToken(),InputMethodManager.HIDE_NOT_ALWAYS);
                 login();
                 return true;
             }
@@ -150,8 +134,11 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Tex
         } else {
             //show error messages
             if (TextUtils.isEmpty(email)) {
+                mEmailView.requestFocus();
                 mEmailView.setError(getString(R.string.mandatory_email));
-            } else if (!ValidationUtils.isEmailValid(email)) {
+            }
+            if (!ValidationUtils.isEmailValid(email)) {
+                mEmailView.requestFocus();
                 mEmailView.setError(getString(R.string.invalid_email));
             }
 
@@ -170,30 +157,28 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Tex
 
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        public void onFragmentInteraction(Uri uri);
+
+    public interface OnLoginFragmentInteractionListener {
+        void onLoginComplete(LoginResponse response);
+        void onError(String message);
     }
 
 
-    public class AuthenticationTask extends AsyncTask<Void, Void, Boolean> {
+    public class AuthenticationTask extends AsyncTask<Void, Void, LoginResponse> {
 
         private String mEmail;
         private String mPassword;
 
         @Override
         protected void onPreExecute() {
-            showProgress(true);
+            if (!NetUtils.isNetworkAvailable(LoginFragment.this.getActivity())) {
+                if(mListener!=null){
+                    mListener.onError(getString(R.string.network_unavailable));
+                }
+            }else{
+                showProgress(true);
+            }
+
         }
 
         public AuthenticationTask(String email, String password) {
@@ -203,13 +188,23 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Tex
 
 
         @Override
-        protected Boolean doInBackground(Void... params) {
-            return null;
+        protected LoginResponse doInBackground(Void... params) {
+            LoginResponse response= AuthenticationHelper.login(mEmail,mPassword);
+            return  response;
         }
 
         @Override
-        protected void onPostExecute(Boolean aBoolean) {
+        protected void onPostExecute(LoginResponse result) {
             showProgress(false);
+            if(mListener!=null){
+                if(result!=null &&result.isAuthenticated()){
+                    mListener.onLoginComplete(result);
+                }else{
+                    mListener.onError(getString(R.string.invalid_credentials));
+                }
+            }
+            mAuthTask=null;
+
         }
 
         @Override

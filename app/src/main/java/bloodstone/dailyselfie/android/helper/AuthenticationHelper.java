@@ -34,16 +34,9 @@ public class AuthenticationHelper {
     private static final String HEADER_USER_NAME="username";
     private static final String HEADER_PASSWORD="password";
 
-    public static LoginResponse login(String userName, String password, Context context, Handler errorHandler) {
+    public static LoginResponse login(String userName, String password) {
 
         LoginResponse loginResponse=null;
-        if (!NetUtils.isNetworkAvailable(context)) {
-            Message msg = errorHandler.obtainMessage();
-            msg.obj = context.getString(R.string.network_unavailable);
-            msg.sendToTarget();
-            errorHandler.sendMessage(msg);
-        }
-
         Map<String,String>headers= new Hashtable<String,String>();
         headers.put(HEADER_USER_NAME,userName);
         headers.put(HEADER_PASSWORD,password);

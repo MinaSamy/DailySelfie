@@ -6,6 +6,14 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:progressBarStyle">@style/ProgressBarStyle</item>
+    </style>
+
+    <style name="ProgressBarStyle" parent="Widget.AppCompat.ProgressBar">
+        <item name="android:indeterminate">true</item>
+        <item name="android:indeterminateBehavior">repeat</item>
+        <item name="android:indeterminateDrawable">@drawable/progress_drawable</item>
+        <item name="android:indeterminateDuration">2000</item>
     </style>
 
 </resources>

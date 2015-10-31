@@ -25,6 +25,7 @@
     <string name="invalid_password">Password length must not be less than six characters</string>
 
 
-    <!--Network Connection Messages -->
+    <!--Error Messages -->
     <string name="network_unavailable">Network connection is un-available</string>
+    <string name="invalid_credentials">Invalid username or password</string>
 </resources>

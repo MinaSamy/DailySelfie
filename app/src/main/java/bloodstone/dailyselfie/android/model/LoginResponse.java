@@ -14,11 +14,11 @@ public class LoginResponse {
         this.userId = userId;
     }
 
-    public boolean isResult() {
+    public boolean isAuthenticated() {
         return result;
     }
 
-    public void setResult(boolean result) {
+    public void setAuthenticated(boolean result) {
         this.result = result;
     }
 

@@ -1,18 +1,20 @@
 package bloodstone.dailyselfie.android;
 
 import android.app.FragmentTransaction;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.widget.FrameLayout;
 
 import bloodstone.dailyselfie.android.fragment.LoginFragment;
+import bloodstone.dailyselfie.android.model.LoginResponse;
 
 
 /**
  * A login screen that offers login via email/password.
  */
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity implements LoginFragment.OnLoginFragmentInteractionListener {
 
     private FrameLayout mFragmentContainer;
     private LoginFragment mLoginFragment;
@@ -33,8 +35,23 @@ public class LoginActivity extends AppCompatActivity {
             transaction.add(R.id.fragment_container, mLoginFragment, FRAGMENT_LOGIN);
             transaction.commit();
         }
+
+        mLoginFragment.setOnLoginFragmentInteractionListener(this);
+
+
     }
 
 
+    @Override
+    public void onLoginComplete(LoginResponse response) {
+        if(response.isAuthenticated()){
+            //TODO navigate to next view
+        }
+    }
+
+    @Override
+    public void onError(String message) {
+        Snackbar.make(mFragmentContainer, message, Snackbar.LENGTH_LONG).show();
+    }
 }
 

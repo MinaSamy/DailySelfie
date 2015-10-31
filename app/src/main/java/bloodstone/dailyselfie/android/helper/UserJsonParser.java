@@ -16,7 +16,7 @@ public class UserJsonParser {
     static public LoginResponse getLoginResponse(String json) throws JSONException {
         LoginResponse response=new LoginResponse();
         JSONObject object=new JSONObject(json);
-        response.setResult(object.getBoolean(TOKEN_RESULT));
+        response.setAuthenticated(object.getBoolean(TOKEN_RESULT));
         response.setUserId(object.getString(TOKEN_USER_ID));
         return response;
     }
