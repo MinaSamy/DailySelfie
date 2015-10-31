@@ -1,13 +1,12 @@
-package bloodstone.dailyselfie.android.fragments;
+package bloodstone.dailyselfie.android.fragment;
 
-import android.animation.LayoutTransition;
-import android.animation.ValueAnimator;
-import android.app.Activity;
 import android.app.Fragment;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.animation.ValueAnimatorCompat;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -18,8 +17,6 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-
-import org.w3c.dom.Text;
 
 import bloodstone.dailyselfie.android.R;
 import bloodstone.dailyselfie.android.utils.ValidationUtils;
@@ -59,6 +56,13 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Tex
     public LoginFragment() {
         // Required empty public constructor
     }
+
+    private Handler mErrorHandler=new Handler(Looper.getMainLooper()){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+        }
+    };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
