@@ -10,6 +10,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 import android.util.JsonReader;
+import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -50,5 +51,16 @@ public class AuthenticationHelper {
         }
 
         return loginResponse;
+    }
+
+    public static boolean register(String email,String password,String displayName){
+        boolean result=false;
+        try {
+            String requestBody=UserJsonParser.getRegistrationRequestBody(email,password,displayName);
+            result=Boolean.parseBoolean(NetUtils.post(URL_REGISTER,null,requestBody));
+        } catch (JSONException e) {
+            Log.e(TAG,e.toString());
+        }
+        return result;
     }
 }

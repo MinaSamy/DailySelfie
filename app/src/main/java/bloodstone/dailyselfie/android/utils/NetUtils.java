@@ -41,7 +41,10 @@ public class NetUtils {
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("POST");
             connection.setDoOutput(true);
+            connection.setDoInput(true);
+
             //set the headers
+            connection.setRequestProperty("Content-Type","application/json");
             if (headers != null) {
                 for (String header : headers.keySet()) {
                     connection.setRequestProperty(header, headers.get(header));
