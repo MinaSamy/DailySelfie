@@ -1,9 +1,10 @@
 package bloodstone.dailyselfie.android.fragment;
 
-import android.app.Fragment;
+
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -77,6 +78,8 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Tex
         mLoginButton.setOnClickListener(this);
         mProgressView = v.findViewById(R.id.login_progress);
         mLoginFormView = v.findViewById(R.id.login_form);
+        Button btnSignUp=(Button)v.findViewById(R.id.btnSignUp);
+        btnSignUp.setOnClickListener(this);
         return v;
     }
 
@@ -95,6 +98,10 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Tex
     public void onClick(View v) {
         if (v.getId() == R.id.sign_in_button) {
             login();
+        }else if(v.getId()==R.id.btnSignUp){
+            if(mListener!=null){
+                mListener.navigateToSignUp();
+            }
         }
     }
 
@@ -161,6 +168,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Tex
     public interface OnLoginFragmentInteractionListener {
         void onLoginComplete(LoginResponse response);
         void onError(String message);
+        void navigateToSignUp();
     }
 
 

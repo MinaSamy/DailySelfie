@@ -3,8 +3,11 @@
     
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
-    <string name="prompt_password">Password (optional)</string>
-    <string name="action_sign_in">Sign in or register</string>
+    <string name="prompt_password">Password)</string>
+    <string name="prompt_display_name">Display name</string>
+    <string name="action_sign_in">Log in</string>
+    <string name="action_register">Register</string>
+    <string name="action_sign_up">Sign up</string>
     <string name="action_sign_in_short">Sign in</string>
     <string name="error_invalid_email">This email address is invalid</string>
     <string name="error_invalid_password">This password is too short</string>
@@ -23,6 +26,7 @@
     <string name="invalid_email">You must provide a valid email</string>
     <string name="mandatory_password">You must provide a password</string>
     <string name="invalid_password">Password length must not be less than six characters</string>
+    <string name="mandatory_display_name">You must provide a display name</string>
 
 
     <!--Error Messages -->

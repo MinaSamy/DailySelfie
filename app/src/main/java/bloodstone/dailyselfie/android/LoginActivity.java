@@ -1,13 +1,16 @@
 package bloodstone.dailyselfie.android;
 
-import android.app.FragmentTransaction;
+import android.app.FragmentManager;
+
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.widget.FrameLayout;
 
 import bloodstone.dailyselfie.android.fragment.LoginFragment;
+import bloodstone.dailyselfie.android.fragment.RegisterFragment;
 import bloodstone.dailyselfie.android.model.LoginResponse;
 
 
@@ -21,17 +24,18 @@ public class LoginActivity extends AppCompatActivity implements LoginFragment.On
 
     //fragments tags
     private final String FRAGMENT_LOGIN = "login_fragment";
+    private final String FRAGMENT_REGISTER = "register_fragment";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        mLoginFragment = (LoginFragment) getFragmentManager().findFragmentByTag(FRAGMENT_LOGIN);
+        mLoginFragment = (LoginFragment) getSupportFragmentManager().findFragmentByTag(FRAGMENT_LOGIN);
         if (mLoginFragment == null) {
             mFragmentContainer = (FrameLayout) findViewById(R.id.fragment_container);
             mLoginFragment = LoginFragment.newInstance();
-            FragmentTransaction transaction = getFragmentManager().beginTransaction();
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.add(R.id.fragment_container, mLoginFragment, FRAGMENT_LOGIN);
             transaction.commit();
         }
@@ -52,6 +56,21 @@ public class LoginActivity extends AppCompatActivity implements LoginFragment.On
     @Override
     public void onError(String message) {
         Snackbar.make(mFragmentContainer, message, Snackbar.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void navigateToSignUp() {
+        RegisterFragment registerFragment=null;
+        registerFragment=(RegisterFragment)getSupportFragmentManager().findFragmentByTag(FRAGMENT_REGISTER);
+        if(registerFragment==null){
+            registerFragment=new RegisterFragment();
+            FragmentTransaction transaction=getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.fragment_container, registerFragment, FRAGMENT_REGISTER);
+            transaction.addToBackStack(null);
+            transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+            transaction.commit();
+        }
+
     }
 }
 
