@@ -35,6 +35,8 @@ public class RegisterFragment extends Fragment implements View.OnClickListener,E
     private ProgressBar mProgressBar;
     private View mRegisterForm;
 
+
+    private onRegistrationFragmentInteractionListener mListener;
     private RegisterTask mRegisterTask;
 
     @Override
@@ -153,8 +155,19 @@ public class RegisterFragment extends Fragment implements View.OnClickListener,E
         @Override
         protected void onPostExecute(Boolean result) {
             showProgress(false);
-            Toast.makeText(getActivity(),result.toString(),Toast.LENGTH_LONG).show();
+            if(mListener!=null){
+                mListener.onRegistrationComplete(result);
+            }
             mRegisterTask=null;
         }
+    }
+
+    public interface onRegistrationFragmentInteractionListener{
+        void onRegistrationComplete(boolean result);
+        void onRegistrationError(String error);
+    }
+
+    public void setonRegistrationFragmentInteractionListener(onRegistrationFragmentInteractionListener listener){
+        this.mListener=listener;
     }
 }

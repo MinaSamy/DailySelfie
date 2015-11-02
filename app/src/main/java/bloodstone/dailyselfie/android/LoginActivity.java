@@ -2,7 +2,9 @@ package bloodstone.dailyselfie.android;
 
 import android.app.FragmentManager;
 
+import android.content.Intent;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 
@@ -17,7 +19,7 @@ import bloodstone.dailyselfie.android.model.LoginResponse;
 /**
  * A login screen that offers login via email/password.
  */
-public class LoginActivity extends AppCompatActivity implements LoginFragment.OnLoginFragmentInteractionListener {
+public class LoginActivity extends AppCompatActivity implements LoginFragment.OnLoginFragmentInteractionListener, RegisterFragment.onRegistrationFragmentInteractionListener {
 
     private FrameLayout mFragmentContainer;
     private LoginFragment mLoginFragment;
@@ -70,7 +72,25 @@ public class LoginActivity extends AppCompatActivity implements LoginFragment.On
             transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
             transaction.commit();
         }
+        registerFragment.setonRegistrationFragmentInteractionListener(this);
 
+    }
+
+    @Override
+    public void onRegistrationComplete(boolean result) {
+        if(result){
+            //Navigate to main activity
+            Intent intent=new Intent(this,MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+        }else{
+            Snackbar.make(mFragmentContainer,R.string.try_again,Snackbar.LENGTH_LONG).show();
+        }
+    }
+
+    @Override
+    public void onRegistrationError(String error) {
+        Snackbar.make(mFragmentContainer,error,Snackbar.LENGTH_LONG).show();
     }
 }
 
