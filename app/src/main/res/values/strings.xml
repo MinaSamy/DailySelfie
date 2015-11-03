@@ -27,6 +27,8 @@
     <string name="mandatory_password">You must provide a password</string>
     <string name="invalid_password">Password length must not be less than six characters</string>
     <string name="mandatory_display_name">You must provide a display name</string>
+    <string name="selfies">Selfies</string>
+    <string name="selfies_effects">Selfie Effects</string>
 
 
     <!--Error Messages -->
