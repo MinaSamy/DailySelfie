@@ -1,5 +1,8 @@
 package bloodstone.dailyselfie.android;
 
+import android.content.Intent;
+import android.os.Handler;
+import android.os.Message;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -19,9 +22,12 @@ import android.view.ViewGroup;
 
 import android.widget.TextView;
 
-import bloodstone.dailyselfie.android.adapter.MainPagerAdapter;
+import java.io.IOException;
 
-public class MainActivity extends AppCompatActivity {
+import bloodstone.dailyselfie.android.adapter.MainPagerAdapter;
+import bloodstone.dailyselfie.android.utils.CameraUtils;
+
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -37,6 +43,8 @@ public class MainActivity extends AppCompatActivity {
      * The {@link ViewPager} that will host the section contents.
      */
     private ViewPager mViewPager;
+
+    private final static int CAMERA_CAPTURE_REQUEST_CODE=10;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,14 +68,7 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(mViewPager);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-
+        fab.setOnClickListener(this);
     }
 
 
@@ -94,4 +95,45 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public void onClick(final View v) {
+        final Handler handler=new Handler(){
+            @Override
+            public void handleMessage(Message msg) {
+                if(msg.arg1==-1){
+                    //capture intent is null
+                }else if(msg.arg1==-2){
+                    //IO exception
+                }else{
+                    Intent intent=(Intent)msg.obj;
+                    startActivityForResult(intent,CAMERA_CAPTURE_REQUEST_CODE);
+                }
+
+            }
+        };
+
+        Thread t=new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Message message=handler.obtainMessage();
+                try {
+                    //TODO retrieve correct user id from login/registration API
+                    Intent intent= CameraUtils.makeCameraCaptureIntent(MainActivity.this,CAMERA_CAPTURE_REQUEST_CODE,
+                            "user1",CameraUtils.PHOTO_TYPE_NORMAL_SELFIE);
+                    if(intent!=null){
+                        message=handler.obtainMessage();
+                        message.obj=intent;
+                    }
+                    else{
+                        message.arg1=-1;
+                    }
+                } catch (IOException e) {
+                    message.arg1=-2;
+                }finally {
+                    message.sendToTarget();
+                }
+            }
+        });
+        t.start();
+    }
 }

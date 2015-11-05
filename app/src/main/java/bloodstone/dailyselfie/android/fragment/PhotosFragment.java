@@ -8,8 +8,7 @@ import android.support.v4.app.Fragment;
  */
 public class PhotosFragment extends Fragment {
 
-    static public final int PHOTO_TYPE_NORMAL_SELFIE=0;
-    static public final int PHOTO_TYPE_EFFECTS_SELFIE=1;
+
     static private final String ARG_PHOTO_TYPE="photo_type";
 
 
