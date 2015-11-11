@@ -148,11 +148,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             fragment.refresh();*/
             //Log.e("URI",data.getData().toString());
 
-            Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+            /*Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
             File f = new File(mImageFile);
             Uri contentUri = Uri.fromFile(f);
             mediaScanIntent.setData(contentUri);
-            this.sendBroadcast(mediaScanIntent);
+            this.sendBroadcast(mediaScanIntent);*/
         }
     }
 }

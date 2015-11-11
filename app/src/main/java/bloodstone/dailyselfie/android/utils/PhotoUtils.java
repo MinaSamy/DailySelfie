@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.MatrixCursor;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -32,7 +33,7 @@ public class PhotoUtils {
      * @return
      * @throws IOException
      */
-    static private File createImageFile(String userId, int selfieType) throws IOException {
+    static private File createImageFile(Context context,String userId, int selfieType) throws IOException {
         File imageFile = null;
         //check the external storage state
         String state = Environment.getExternalStorageState();
@@ -41,10 +42,10 @@ public class PhotoUtils {
             File storageDir;
             if (selfieType == PHOTO_TYPE_NORMAL_SELFIE) {
                 storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES
-                        + File.separator + DIR_SELFIES + File.separator + userId + File.separator + DIR_NORMAL_SELFIES);
+                        + File.separator+DIR_SELFIES+File.separator + userId+File.separator+DIR_NORMAL_SELFIES);
             } else {
                 storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES
-                        + File.separator + DIR_SELFIES + File.separator + userId + File.separator + DIR_EFFECTS_SELFIES);
+                        + File.separator+DIR_SELFIES+File.separator + userId+File.separator+DIR_EFFECTS_SELFIES);
             }
 
             boolean directoryExists = true;
@@ -53,7 +54,12 @@ public class PhotoUtils {
             }
 
             if (directoryExists) {
-                imageFile = File.createTempFile(fileName, ".jpg", storageDir);
+                imageFile=File.createTempFile(fileName,".jpg",storageDir);
+                imageFile.setWritable(true,false);
+                //imageFile.setExecutable(true,false);
+                imageFile.setReadable(true,false);
+
+                MediaScannerConnection.scanFile(context, new String[]{imageFile.getPath()}, null, null);
             } else {
                 throw new IOException("Directory creation failed");
             }
@@ -75,9 +81,10 @@ public class PhotoUtils {
     static public Intent makeCameraCaptureIntent(Context context, int requestCode, String userId, int selfieType) throws IOException {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (intent.resolveActivity(context.getPackageManager()) != null) {
-            File photoFile = createImageFile(userId, selfieType);
+            File photoFile = createImageFile(context,userId, selfieType);
             if (photoFile != null) {
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
+                intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
                 intent.putExtra("file",photoFile.getAbsolutePath());
                 return intent;
             }
