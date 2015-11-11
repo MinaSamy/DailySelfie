@@ -107,7 +107,7 @@ public class PhotoUtils {
     }
 
     static public CursorLoader getImageFileCursorLoader(Context context){
-        String selection = MediaStore.Images.Media.DATA + " LIKE ?";
+        String selection = MediaStore.Images.Media.DATA + " LIKE ? AND "+MediaStore.Images.Media.SIZE+">0";
         String[] selectionArgs = new String[]{"%Daily Selfies/user1/Selfies/%"};
         CursorLoader loader=new CursorLoader(context,MediaStore.Images.Media.EXTERNAL_CONTENT_URI,null,
                 selection,selectionArgs,null);
