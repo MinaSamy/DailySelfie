@@ -2,6 +2,7 @@ package bloodstone.dailyselfie.android.fragment;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -17,9 +18,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import bloodstone.dailyselfie.android.MainActivity;
 import bloodstone.dailyselfie.android.R;
 import bloodstone.dailyselfie.android.helper.AuthenticationHelper;
 import bloodstone.dailyselfie.android.model.LoginResponse;
+import bloodstone.dailyselfie.android.utils.PhotoUtils;
 import bloodstone.dailyselfie.android.utils.NetUtils;
 import bloodstone.dailyselfie.android.utils.ValidationUtils;
 
@@ -96,13 +99,24 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Tex
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.sign_in_button) {
+        /*if (v.getId() == R.id.sign_in_button) {
             login();
         }else if(v.getId()==R.id.btnSignUp){
             if(mListener!=null){
                 mListener.navigateToSignUp();
             }
-        }
+        }*/
+
+       /* Thread t=new Thread(new Runnable() {
+            @Override
+            public void run() {
+                PhotoUtils cam=new PhotoUtils();
+                cam.test(getActivity());
+            }
+        });
+        t.start();*/
+        Intent intent=new Intent(getActivity(), MainActivity.class);
+        startActivity(intent);
     }
 
     @Override

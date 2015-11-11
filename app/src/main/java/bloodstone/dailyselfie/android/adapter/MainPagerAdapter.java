@@ -7,7 +7,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 
 import bloodstone.dailyselfie.android.R;
 import bloodstone.dailyselfie.android.fragment.PhotosFragment;
-import bloodstone.dailyselfie.android.utils.CameraUtils;
+import bloodstone.dailyselfie.android.utils.PhotoUtils;
 
 /**
  * Created by minsamy on 11/3/2015.
@@ -24,9 +24,9 @@ public class MainPagerAdapter extends FragmentPagerAdapter {
     @Override
     public Fragment getItem(int position) {
         if (position == 0) {
-            return PhotosFragment.newInstance(CameraUtils.PHOTO_TYPE_NORMAL_SELFIE);
+            return PhotosFragment.newInstance(PhotoUtils.PHOTO_TYPE_NORMAL_SELFIE);
         }
-        return PhotosFragment.newInstance(CameraUtils.PHOTO_TYPE_EFFECTS_SELFIE);
+        return PhotosFragment.newInstance(PhotoUtils.PHOTO_TYPE_EFFECTS_SELFIE);
 
     }
 

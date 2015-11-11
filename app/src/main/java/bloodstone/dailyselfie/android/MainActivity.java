@@ -1,31 +1,30 @@
 package bloodstone.dailyselfie.android;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.MediaStore;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
-import android.view.LayoutInflater;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 
-import android.widget.TextView;
-
+import java.io.File;
 import java.io.IOException;
 
 import bloodstone.dailyselfie.android.adapter.MainPagerAdapter;
-import bloodstone.dailyselfie.android.utils.CameraUtils;
+import bloodstone.dailyselfie.android.fragment.PhotosFragment;
+import bloodstone.dailyselfie.android.utils.PhotoUtils;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -95,6 +94,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
+    private String mImageFile=null;
+
     @Override
     public void onClick(final View v) {
         final Handler handler=new Handler(){
@@ -106,6 +107,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     //IO exception
                 }else{
                     Intent intent=(Intent)msg.obj;
+
+                    mImageFile="file:" +intent.getStringExtra("file");
                     startActivityForResult(intent,CAMERA_CAPTURE_REQUEST_CODE);
                 }
 
@@ -118,8 +121,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Message message=handler.obtainMessage();
                 try {
                     //TODO retrieve correct user id from login/registration API
-                    Intent intent= CameraUtils.makeCameraCaptureIntent(MainActivity.this,CAMERA_CAPTURE_REQUEST_CODE,
-                            "user1",CameraUtils.PHOTO_TYPE_NORMAL_SELFIE);
+                    Intent intent= PhotoUtils.makeCameraCaptureIntent(MainActivity.this, CAMERA_CAPTURE_REQUEST_CODE,
+                            "user1", PhotoUtils.PHOTO_TYPE_NORMAL_SELFIE);
                     if(intent!=null){
                         message=handler.obtainMessage();
                         message.obj=intent;
@@ -135,5 +138,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
         t.start();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==CAMERA_CAPTURE_REQUEST_CODE &&resultCode== Activity.RESULT_OK){
+            /*PhotosFragment fragment= (PhotosFragment) mPagerAdapter.getItem(mViewPager.getCurrentItem());
+            fragment.refresh();*/
+            //Log.e("URI",data.getData().toString());
+
+            Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+            File f = new File(mImageFile);
+            Uri contentUri = Uri.fromFile(f);
+            mediaScanIntent.setData(contentUri);
+            this.sendBroadcast(mediaScanIntent);
+        }
     }
 }
