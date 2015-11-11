@@ -115,7 +115,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Tex
             }
         });
         t.start();*/
-        Intent intent=new Intent(getActivity(), MainActivity.class);
+        Intent intent=MainActivity.makeMainActivityIntent(getActivity(),"user1");
         startActivity(intent);
     }
 

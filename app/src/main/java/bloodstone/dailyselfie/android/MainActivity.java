@@ -1,6 +1,7 @@
 package bloodstone.dailyselfie.android;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Handler;
@@ -42,8 +43,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * The {@link ViewPager} that will host the section contents.
      */
     private ViewPager mViewPager;
+    private String mUserId=PhotoUtils.ANON_USER;
 
     private final static int CAMERA_CAPTURE_REQUEST_CODE=10;
+    private final static String EXTRA_USER_ID="user_id";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +60,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setSupportActionBar(toolbar);
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
-        mPagerAdapter = new MainPagerAdapter(getSupportFragmentManager(),this);
+
+        if(getIntent().hasExtra(EXTRA_USER_ID)){
+            mUserId=getIntent().getStringExtra(EXTRA_USER_ID);
+        }
+        mPagerAdapter = new MainPagerAdapter(getSupportFragmentManager(),this,mUserId);
 
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
@@ -94,7 +101,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
-    private String mImageFile=null;
+    static public Intent makeMainActivityIntent(Context context, String userId){
+        Intent intent=new Intent(context,MainActivity.class);
+        intent.putExtra(EXTRA_USER_ID,userId);
+        return intent;
+    }
 
     @Override
     public void onClick(final View v) {
@@ -107,8 +118,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     //IO exception
                 }else{
                     Intent intent=(Intent)msg.obj;
-
-                    mImageFile="file:" +intent.getStringExtra("file");
                     startActivityForResult(intent,CAMERA_CAPTURE_REQUEST_CODE);
                 }
 
@@ -138,21 +147,5 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
         t.start();
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode==CAMERA_CAPTURE_REQUEST_CODE &&resultCode== Activity.RESULT_OK){
-            /*PhotosFragment fragment= (PhotosFragment) mPagerAdapter.getItem(mViewPager.getCurrentItem());
-            fragment.refresh();*/
-            //Log.e("URI",data.getData().toString());
-
-            /*Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-            File f = new File(mImageFile);
-            Uri contentUri = Uri.fromFile(f);
-            mediaScanIntent.setData(contentUri);
-            this.sendBroadcast(mediaScanIntent);*/
-        }
     }
 }

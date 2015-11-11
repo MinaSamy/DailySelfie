@@ -15,18 +15,20 @@ import bloodstone.dailyselfie.android.utils.PhotoUtils;
 public class MainPagerAdapter extends FragmentPagerAdapter {
 
     private Context mContext;
+    private String mUserId;
 
-    public MainPagerAdapter(FragmentManager fm, Context context) {
+    public MainPagerAdapter(FragmentManager fm, Context context,String userId) {
         super(fm);
         mContext = context;
+        mUserId=userId;
     }
 
     @Override
     public Fragment getItem(int position) {
         if (position == 0) {
-            return PhotosFragment.newInstance(PhotoUtils.PHOTO_TYPE_NORMAL_SELFIE);
+            return PhotosFragment.newInstance(PhotoUtils.PHOTO_TYPE_NORMAL_SELFIE,mUserId);
         }
-        return PhotosFragment.newInstance(PhotoUtils.PHOTO_TYPE_EFFECTS_SELFIE);
+        return PhotosFragment.newInstance(PhotoUtils.PHOTO_TYPE_EFFECTS_SELFIE,mUserId);
 
     }
 

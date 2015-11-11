@@ -27,6 +27,9 @@ public class PhotoUtils {
     static private String DIR_NORMAL_SELFIES = "Selfies";
     static private String DIR_EFFECTS_SELFIES = "Selfies Effects";
 
+
+    static public final String ANON_USER="anon_user";
+
     /**
      * @param userId
      * @param selfieType
@@ -92,35 +95,25 @@ public class PhotoUtils {
         return null;
     }
 
-    static public Cursor getImageFileCursor(Context context) {
-        String selection = MediaStore.Images.Media.DATA + " LIKE ?";
-        String[] selectionArgs = new String[]{"%Daily Selfies/user1/Selfies%"};
-        Cursor c = context.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, null, selection, selectionArgs, null);
-        return c;
-    }
 
-    static public Cursor getThumbnailCursor(Context context,String imageFileId) {
-        String selection = MediaStore.Images.Thumbnails.IMAGE_ID + "=?";
-        String[] selectionArgs = new String[]{imageFileId};
-        Cursor c = context.getContentResolver().query(MediaStore.Images.Thumbnails.EXTERNAL_CONTENT_URI, null, selection, selectionArgs, null);
-        return c;
-    }
 
-    static public CursorLoader getImageFileCursorLoader(Context context){
+
+
+    static public CursorLoader getImageFileCursorLoader(Context context,String userId,int selfieType){
         String selection = MediaStore.Images.Media.DATA + " LIKE ? AND "+MediaStore.Images.Media.SIZE+">0";
-        String[] selectionArgs = new String[]{"%Daily Selfies/user1/Selfies/%"};
+        String args=null;
+        if(selfieType==PHOTO_TYPE_NORMAL_SELFIE){
+            args="%"+DIR_SELFIES+File.separator+userId+File.separator+DIR_NORMAL_SELFIES+File.separator+"%";
+        }else{
+            args="%"+DIR_SELFIES+File.separator+userId+File.separator+DIR_EFFECTS_SELFIES+File.separator+"%";
+        }
+        String[] selectionArgs = new String[]{args};
         CursorLoader loader=new CursorLoader(context,MediaStore.Images.Media.EXTERNAL_CONTENT_URI,null,
                 selection,selectionArgs,null);
         return loader;
     }
 
-    static public CursorLoader getThumbnailCursorLoader(Context context,int imageId){
-        String selection = MediaStore.Images.Thumbnails.IMAGE_ID + "=?";
-        String[] selectionArgs = new String[]{String.valueOf(imageId)};
-        CursorLoader loader=new CursorLoader(context,MediaStore.Images.Thumbnails.EXTERNAL_CONTENT_URI, null,
-                selection, selectionArgs, null);
-        return loader;
-    }
+
 
     public void test(Context context) {
 
