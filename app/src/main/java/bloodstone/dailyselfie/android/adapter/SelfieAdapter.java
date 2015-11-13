@@ -52,8 +52,8 @@ public class SelfieAdapter extends RecyclerView.Adapter<SelfieAdapter.ViewHolder
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         if(mCursor.moveToPosition(position)){
-            String title=mCursor.getString(mCursor.getColumnIndex(MediaStore.Images.Media.TITLE));
-            holder.setImageTitle(title);
+
+            //holder.setImageTitle(title);
             holder.setImage(mCursor);
             /*int imageId=mCursor.getInt(mCursor.getColumnIndex(MediaStore.Images.Media._ID));
 
@@ -125,7 +125,7 @@ public class SelfieAdapter extends RecyclerView.Adapter<SelfieAdapter.ViewHolder
         }
 
         public void setImage(Cursor cursor){
-            mImageLoader.displayImage(mCursor,this.mImg);
+            mImageLoader.displayImage(mCursor,this.mImg,this.mTxtTitle);
         }
 
         public void setImageTitle(String title){
