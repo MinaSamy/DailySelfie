@@ -3,13 +3,11 @@ package bloodstone.dailyselfie.android.utils;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.database.MatrixCursor;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.content.CursorLoader;
-import android.support.v4.content.FileProvider;
 import android.util.Log;
 
 import java.io.File;
@@ -28,7 +26,7 @@ public class PhotoUtils {
     static private String DIR_EFFECTS_SELFIES = "Selfies Effects";
 
 
-    static public final String ANON_USER="anon_user";
+    static public final String ANON_USER = "anon_user";
 
     /**
      * @param userId
@@ -36,7 +34,7 @@ public class PhotoUtils {
      * @return
      * @throws IOException
      */
-    static private File createImageFile(Context context,String userId, int selfieType) throws IOException {
+    static private File createImageFile(Context context, String userId, int selfieType) throws IOException {
         File imageFile = null;
         //check the external storage state
         String state = Environment.getExternalStorageState();
@@ -45,10 +43,10 @@ public class PhotoUtils {
             File storageDir;
             if (selfieType == PHOTO_TYPE_NORMAL_SELFIE) {
                 storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES
-                        + File.separator+DIR_SELFIES+File.separator + userId+File.separator+DIR_NORMAL_SELFIES);
+                        + File.separator + DIR_SELFIES + File.separator + userId + File.separator + DIR_NORMAL_SELFIES);
             } else {
                 storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES
-                        + File.separator+DIR_SELFIES+File.separator + userId+File.separator+DIR_EFFECTS_SELFIES);
+                        + File.separator + DIR_SELFIES + File.separator + userId + File.separator + DIR_EFFECTS_SELFIES);
             }
 
             boolean directoryExists = true;
@@ -57,10 +55,10 @@ public class PhotoUtils {
             }
 
             if (directoryExists) {
-                imageFile=File.createTempFile(fileName,".jpg",storageDir);
-                imageFile.setWritable(true,false);
+                imageFile = File.createTempFile(fileName, ".jpg", storageDir);
+                imageFile.setWritable(true, false);
                 //imageFile.setExecutable(true,false);
-                imageFile.setReadable(true,false);
+                imageFile.setReadable(true, false);
 
                 MediaScannerConnection.scanFile(context, new String[]{imageFile.getPath()}, null, null);
             } else {
@@ -84,11 +82,11 @@ public class PhotoUtils {
     static public Intent makeCameraCaptureIntent(Context context, int requestCode, String userId, int selfieType) throws IOException {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (intent.resolveActivity(context.getPackageManager()) != null) {
-            File photoFile = createImageFile(context,userId, selfieType);
+            File photoFile = createImageFile(context, userId, selfieType);
             if (photoFile != null) {
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
                 intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
-                intent.putExtra("file",photoFile.getAbsolutePath());
+                intent.putExtra("file", photoFile.getAbsolutePath());
                 return intent;
             }
         }
@@ -96,23 +94,19 @@ public class PhotoUtils {
     }
 
 
-
-
-
-    static public CursorLoader getImageFileCursorLoader(Context context,String userId,int selfieType){
-        String selection = MediaStore.Images.Media.DATA + " LIKE ? AND "+MediaStore.Images.Media.SIZE+">0";
-        String args=null;
-        if(selfieType==PHOTO_TYPE_NORMAL_SELFIE){
-            args="%"+DIR_SELFIES+File.separator+userId+File.separator+DIR_NORMAL_SELFIES+File.separator+"%";
-        }else{
-            args="%"+DIR_SELFIES+File.separator+userId+File.separator+DIR_EFFECTS_SELFIES+File.separator+"%";
+    static public CursorLoader getImageFileCursorLoader(Context context, String userId, int selfieType) {
+        String selection = MediaStore.Images.Media.DATA + " LIKE ? AND " + MediaStore.Images.Media.SIZE + ">0";
+        String args = null;
+        if (selfieType == PHOTO_TYPE_NORMAL_SELFIE) {
+            args = "%" + DIR_SELFIES + File.separator + userId + File.separator + DIR_NORMAL_SELFIES + File.separator + "%";
+        } else {
+            args = "%" + DIR_SELFIES + File.separator + userId + File.separator + DIR_EFFECTS_SELFIES + File.separator + "%";
         }
         String[] selectionArgs = new String[]{args};
-        CursorLoader loader=new CursorLoader(context,MediaStore.Images.Media.EXTERNAL_CONTENT_URI,null,
-                selection,selectionArgs,null);
+        CursorLoader loader = new CursorLoader(context, MediaStore.Images.Media.EXTERNAL_CONTENT_URI, null,
+                selection, selectionArgs, null);
         return loader;
     }
-
 
 
     public void test(Context context) {
@@ -139,7 +133,7 @@ public class PhotoUtils {
         }*/
 
         //TODO check Matrix cursor
-        Log.e("Count",String.valueOf(c.getCount()));
+        Log.e("Count", String.valueOf(c.getCount()));
         while (c.moveToNext()) {
             int x = c.getInt(c.getColumnIndex(MediaStore.Images.Media._ID));
             String s = c.getString(c.getColumnIndex(MediaStore.Images.Media.BUCKET_DISPLAY_NAME));

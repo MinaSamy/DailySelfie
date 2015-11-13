@@ -1,15 +1,21 @@
 package bloodstone.dailyselfie.android.adapter;
 
+import android.content.Context;
 import android.database.Cursor;
 import android.database.DataSetObserver;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.ThumbnailUtils;
 import android.provider.MediaStore;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import bloodstone.dailyselfie.android.R;
+import bloodstone.dailyselfie.android.utils.ImageLoader;
 
 /**
  * Created by minsamy on 11/11/2015.
@@ -22,6 +28,7 @@ public class SelfieAdapter extends RecyclerView.Adapter<SelfieAdapter.ViewHolder
     //so we use this boolean to track the data status
     private boolean mIsDataValid=false;
     private SelfieDataSetObserver mDataSetObserver;
+    private ImageLoader mImageLoader;
 
     public SelfieAdapter(Cursor cursor){
         this.mCursor=cursor;
@@ -31,6 +38,8 @@ public class SelfieAdapter extends RecyclerView.Adapter<SelfieAdapter.ViewHolder
             //mDataSetObserver=new SelfieDataSetObserver();
             mCursor.registerDataSetObserver(mDataSetObserver);
         }
+
+        mImageLoader=new ImageLoader();
     }
 
     @Override
@@ -45,6 +54,19 @@ public class SelfieAdapter extends RecyclerView.Adapter<SelfieAdapter.ViewHolder
         if(mCursor.moveToPosition(position)){
             String title=mCursor.getString(mCursor.getColumnIndex(MediaStore.Images.Media.TITLE));
             holder.setImageTitle(title);
+            holder.setImage(mCursor);
+            /*int imageId=mCursor.getInt(mCursor.getColumnIndex(MediaStore.Images.Media._ID));
+
+            BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+            bmOptions.inSampleSize =4;
+
+            Bitmap map=MediaStore.Images.Thumbnails.getThumbnail(holder.getContext().getContentResolver(),
+                    imageId,MediaStore.Images.Thumbnails.MINI_KIND,bmOptions);
+
+            //get the thumbnail
+            //holder.getContext().getContentResolver().query(MediaStore.Images.Thumbnails.EXTERNAL_CONTENT_URI)
+
+            holder.setImage(map);*/
         }
     }
 
@@ -88,12 +110,22 @@ public class SelfieAdapter extends RecyclerView.Adapter<SelfieAdapter.ViewHolder
         return oldCursor;
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public  class ViewHolder extends RecyclerView.ViewHolder {
 
         private TextView mTxtTitle;
+        private ImageView mImg;
         public ViewHolder(View view) {
             super(view);
             mTxtTitle=(TextView)view.findViewById(R.id.selfie_title);
+            mImg=(ImageView)view.findViewById(R.id.selfie_image);
+        }
+
+        public Context getContext(){
+            return mTxtTitle.getContext();
+        }
+
+        public void setImage(Cursor cursor){
+            mImageLoader.displayImage(mCursor,this.mImg);
         }
 
         public void setImageTitle(String title){
