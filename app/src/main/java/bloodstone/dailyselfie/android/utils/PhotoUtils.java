@@ -1,8 +1,12 @@
 package bloodstone.dailyselfie.android.utils;
 
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Rect;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Environment;
@@ -11,13 +15,17 @@ import android.support.v4.content.CursorLoader;
 import android.util.Log;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Calendar;
 
 /**
  * Created by minsamy on 11/5/2015.
  */
 public class PhotoUtils {
+
+    static private final String TAG=PhotoUtils.class.getName();
 
     static public final int PHOTO_TYPE_NORMAL_SELFIE = 0;
     static public final int PHOTO_TYPE_EFFECTS_SELFIE = 1;
@@ -141,6 +149,61 @@ public class PhotoUtils {
             Log.e("Data", s + "**" + data);
         }
 
+    }
+
+    static public Bitmap getSelfieDetails(Context context, long imageId, int targetWidth,int targetHeight){
+        Bitmap bmp=null;
+        InputStream stream=null;
+        final BitmapFactory.Options options=new BitmapFactory.Options();
+        options.inJustDecodeBounds=true;
+        Uri imageUri= ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, imageId);
+        try {
+            stream=context.getContentResolver().openInputStream(imageUri);
+            BitmapFactory.decodeStream(stream,null,options);
+            options.inSampleSize=calculateInSampleSize(options,targetWidth,targetHeight);
+
+            options.inJustDecodeBounds=false;
+            stream=context.getContentResolver().openInputStream(imageUri);
+            bmp= BitmapFactory.decodeStream(stream, null, options);
+
+
+
+        } catch (FileNotFoundException e) {
+            LogUtil.logError(TAG,e.toString());
+        }
+        finally {
+            if(stream!=null){
+                try {
+                    stream.close();
+                } catch (IOException e) {
+                    LogUtil.logError(TAG, e.toString());
+                }
+            }
+            return bmp;
+        }
+    }
+
+    private static int calculateInSampleSize(
+            BitmapFactory.Options options, int reqWidth, int reqHeight) {
+        // Raw height and width of image
+        final int height = options.outHeight;
+        final int width = options.outWidth;
+        int inSampleSize = 1;
+
+        if (height > reqHeight || width > reqWidth) {
+
+            final int halfHeight = height / 2;
+            final int halfWidth = width / 2;
+
+            // Calculate the largest inSampleSize value that is a power of 2 and keeps both
+            // height and width larger than the requested height and width.
+            while ((halfHeight / inSampleSize) > reqHeight
+                    && (halfWidth / inSampleSize) > reqWidth) {
+                inSampleSize *= 2;
+            }
+        }
+
+        return inSampleSize;
     }
 
 

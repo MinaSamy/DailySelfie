@@ -19,10 +19,12 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import bloodstone.dailyselfie.android.utils.PhotoUtils;
+
 public class SelfieDetailsActivity extends AppCompatActivity {
 
-    static private final String EXTRA_IMAGE_ID="image_id";
-    static private final String EXTRA_SELFIE_TYPE="selfie_type";
+    static private final String EXTRA_IMAGE_ID = "image_id";
+    static private final String EXTRA_SELFIE_TYPE = "selfie_type";
 
     private ImageView mSelfieImage;
     private int mImageId;
@@ -32,34 +34,30 @@ public class SelfieDetailsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_selfie_details);
-        mSelfieImage=(ImageView)findViewById(R.id.selfie_image);
+        mSelfieImage = (ImageView) findViewById(R.id.selfie_image);
 
 
-        final Handler handler=new Handler(){
+        final Handler handler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
-                if(mBitmap!=null){
+                if (mBitmap != null) {
                     mSelfieImage.setImageBitmap(mBitmap);
                 }
             }
         };
-        final Thread t=new Thread(new Runnable() {
+        final Thread t = new Thread(new Runnable() {
             @Override
             public void run() {
-                if(getIntent().hasExtra(EXTRA_IMAGE_ID)){
-                    mImageId=getIntent().getIntExtra(EXTRA_IMAGE_ID,-1);
-                    if(mImageId!=-1){
-                        Uri imageUri= ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,mImageId);
-                        try {
-                            InputStream stream=getContentResolver().openInputStream(imageUri);
-                            mBitmap= BitmapFactory.decodeStream(stream);
-                            handler.sendEmptyMessage(0);
-                        } catch (FileNotFoundException e) {
-                            e.printStackTrace();
-                        }
+                if (getIntent().hasExtra(EXTRA_IMAGE_ID)) {
+                    mImageId = getIntent().getIntExtra(EXTRA_IMAGE_ID, -1);
+                    if (mImageId != -1) {
+                        mBitmap = PhotoUtils.getSelfieDetails(SelfieDetailsActivity.this, mImageId, mSelfieImage.getMeasuredWidth(),
+                                mSelfieImage.getMeasuredHeight());
+                        handler.sendEmptyMessage(0);
                     }
                 }
             }
+
         });
 
         mSelfieImage.post(new Runnable() {
@@ -96,10 +94,10 @@ public class SelfieDetailsActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
-    static public Intent makeIntent(Context context,int imageId, int selfieType){
-        Intent intent=new Intent(context,SelfieDetailsActivity.class);
-        intent.putExtra(EXTRA_IMAGE_ID,imageId);
-        intent.putExtra(EXTRA_SELFIE_TYPE,selfieType);
+    static public Intent makeIntent(Context context, int imageId, int selfieType) {
+        Intent intent = new Intent(context, SelfieDetailsActivity.class);
+        intent.putExtra(EXTRA_IMAGE_ID, imageId);
+        intent.putExtra(EXTRA_SELFIE_TYPE, selfieType);
         return intent;
     }
 }
