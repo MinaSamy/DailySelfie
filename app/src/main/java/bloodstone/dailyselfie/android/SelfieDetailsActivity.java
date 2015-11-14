@@ -1,23 +1,20 @@
 package bloodstone.dailyselfie.android;
 
-import android.content.ContentUris;
+
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.media.Image;
-import android.net.Uri;
+
 import android.os.Handler;
 import android.os.Message;
-import android.provider.MediaStore;
+
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
 
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+
+import java.lang.ref.WeakReference;
 
 import bloodstone.dailyselfie.android.utils.PhotoUtils;
 
@@ -28,7 +25,7 @@ public class SelfieDetailsActivity extends AppCompatActivity {
 
     private ImageView mSelfieImage;
     private int mImageId;
-    private Bitmap mBitmap;
+    private WeakReference<Bitmap> mBitmap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,8 +37,8 @@ public class SelfieDetailsActivity extends AppCompatActivity {
         final Handler handler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
-                if (mBitmap != null) {
-                    mSelfieImage.setImageBitmap(mBitmap);
+                if (mBitmap != null &&mBitmap.get()!=null) {
+                    mSelfieImage.setImageBitmap(mBitmap.get());
                 }
             }
         };
@@ -51,8 +48,12 @@ public class SelfieDetailsActivity extends AppCompatActivity {
                 if (getIntent().hasExtra(EXTRA_IMAGE_ID)) {
                     mImageId = getIntent().getIntExtra(EXTRA_IMAGE_ID, -1);
                     if (mImageId != -1) {
-                        mBitmap = PhotoUtils.getSelfieDetails(SelfieDetailsActivity.this, mImageId, mSelfieImage.getMeasuredWidth(),
+                        Bitmap bmp = PhotoUtils.getSelfieDetails(SelfieDetailsActivity.this, mImageId, mSelfieImage.getMeasuredWidth(),
                                 mSelfieImage.getMeasuredHeight());
+                        if(bmp!=null){
+                            mBitmap=new WeakReference<Bitmap>(bmp);
+                        }
+
                         handler.sendEmptyMessage(0);
                     }
                 }
