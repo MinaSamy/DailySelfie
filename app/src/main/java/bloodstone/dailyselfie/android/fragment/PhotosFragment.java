@@ -1,6 +1,7 @@
 package bloodstone.dailyselfie.android.fragment;
 
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -15,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import bloodstone.dailyselfie.android.R;
+import bloodstone.dailyselfie.android.SelfieDetailsActivity;
 import bloodstone.dailyselfie.android.adapter.SelfieAdapter;
 import bloodstone.dailyselfie.android.utils.PhotoUtils;
 
@@ -96,6 +98,8 @@ public class PhotosFragment extends Fragment implements LoaderManager.LoaderCall
 
     @Override
     public void onRecyclerViewItemClick(int itemId) {
-        Snackbar.make(mRecyclerView, String.valueOf(itemId), Snackbar.LENGTH_LONG).show();
+        //Snackbar.make(mRecyclerView, String.valueOf(itemId), Snackbar.LENGTH_LONG).show();
+        Intent intent= SelfieDetailsActivity.makeIntent(getActivity(),itemId,mSelfieType);
+        startActivity(intent);
     }
 }
