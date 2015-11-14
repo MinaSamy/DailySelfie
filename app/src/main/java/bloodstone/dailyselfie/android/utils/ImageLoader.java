@@ -28,7 +28,7 @@ public class ImageLoader {
                 txt.setText(title);
                 int imageId=cursor.getInt(cursor.getColumnIndex(MediaStore.Images.Media._ID));
                 BitmapFactory.Options bmOptions = new BitmapFactory.Options();
-                bmOptions.inSampleSize =4;
+                bmOptions.inSampleSize =8;
 
                 final Bitmap map=MediaStore.Images.Thumbnails.getThumbnail(imageView.getContext().getContentResolver(),
                         imageId, MediaStore.Images.Thumbnails.MINI_KIND, bmOptions);

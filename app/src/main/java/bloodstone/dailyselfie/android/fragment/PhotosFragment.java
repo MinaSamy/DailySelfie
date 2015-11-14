@@ -1,9 +1,9 @@
 package bloodstone.dailyselfie.android.fragment;
 
 
-
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -21,11 +21,11 @@ import bloodstone.dailyselfie.android.utils.PhotoUtils;
 /**
  * Created by minsamy on 11/4/2015.
  */
-public class PhotosFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+public class PhotosFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>, SelfieAdapter.OnRecyclerViewItemClickListener {
 
 
     static private final String ARG_PHOTO_TYPE = "photo_type";
-    static private final String ARG_USER_ID="user_id";
+    static private final String ARG_USER_ID = "user_id";
 
     private Cursor mImageFileCursor;
     static private final int IMAGE_FILE_LOADER_ID = 0;
@@ -38,11 +38,11 @@ public class PhotosFragment extends Fragment implements LoaderManager.LoaderCall
     private int mSelfieType;
     private String mUserId;
 
-    static public PhotosFragment newInstance(int photosType,String userId) {
+    static public PhotosFragment newInstance(int photosType, String userId) {
         PhotosFragment fragment = new PhotosFragment();
         Bundle b = new Bundle();
         b.putInt(ARG_PHOTO_TYPE, photosType);
-        b.putString(ARG_USER_ID,userId);
+        b.putString(ARG_USER_ID, userId);
         fragment.setArguments(b);
         return fragment;
     }
@@ -65,11 +65,12 @@ public class PhotosFragment extends Fragment implements LoaderManager.LoaderCall
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         mAdapter = new SelfieAdapter(null);
+        mAdapter.setOnRecyclerViewItemClickListener(this);
         mRecyclerView.setAdapter(mAdapter);
 
-        if(getArguments()!=null){
-            mSelfieType=getArguments().getInt(ARG_PHOTO_TYPE);
-            mUserId=getArguments().getString(ARG_USER_ID);
+        if (getArguments() != null) {
+            mSelfieType = getArguments().getInt(ARG_PHOTO_TYPE);
+            mUserId = getArguments().getString(ARG_USER_ID);
         }
 
         getLoaderManager().initLoader(IMAGE_FILE_LOADER_ID, null, this);
@@ -78,7 +79,7 @@ public class PhotosFragment extends Fragment implements LoaderManager.LoaderCall
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        CursorLoader loader = PhotoUtils.getImageFileCursorLoader(getActivity(),mUserId,mSelfieType);
+        CursorLoader loader = PhotoUtils.getImageFileCursorLoader(getActivity(), mUserId, mSelfieType);
         return loader;
     }
 
@@ -91,5 +92,10 @@ public class PhotosFragment extends Fragment implements LoaderManager.LoaderCall
     public void onLoaderReset(Loader<Cursor> loader) {
         //swap cursor adapter
         mAdapter.swapCursor(null);
+    }
+
+    @Override
+    public void onRecyclerViewItemClick(int itemId) {
+        Snackbar.make(mRecyclerView, String.valueOf(itemId), Snackbar.LENGTH_LONG).show();
     }
 }
