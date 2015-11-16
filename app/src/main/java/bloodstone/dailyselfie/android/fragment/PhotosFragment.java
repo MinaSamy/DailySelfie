@@ -99,7 +99,7 @@ public class PhotosFragment extends Fragment implements LoaderManager.LoaderCall
     @Override
     public void onRecyclerViewItemClick(int itemId) {
         //Snackbar.make(mRecyclerView, String.valueOf(itemId), Snackbar.LENGTH_LONG).show();
-        Intent intent= SelfieDetailsActivity.makeIntent(getActivity(),itemId,mSelfieType);
+        Intent intent= SelfieDetailsActivity.makeIntent(getActivity(),itemId,mSelfieType,mUserId);
         startActivity(intent);
     }
 }

@@ -22,6 +22,7 @@ public class SelfieDetailsActivity extends AppCompatActivity {
 
     static private final String EXTRA_IMAGE_ID = "image_id";
     static private final String EXTRA_SELFIE_TYPE = "selfie_type";
+    static private final String EXTRA_USER_ID="user_id";
 
     private ImageView mSelfieImage;
     private int mImageId;
@@ -95,10 +96,11 @@ public class SelfieDetailsActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
-    static public Intent makeIntent(Context context, int imageId, int selfieType) {
+    static public Intent makeIntent(Context context, int imageId, int selfieType,String userId) {
         Intent intent = new Intent(context, SelfieDetailsActivity.class);
         intent.putExtra(EXTRA_IMAGE_ID, imageId);
         intent.putExtra(EXTRA_SELFIE_TYPE, selfieType);
+        intent.putExtra(EXTRA_USER_ID,userId);
         return intent;
     }
 }
