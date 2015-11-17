@@ -73,7 +73,11 @@ public class PhotoUtils {
                 //imageFile.setExecutable(true,false);
                 imageFile.setReadable(true, false);
 
-                MediaScannerConnection.scanFile(context, new String[]{imageFile.getPath()}, null, null);
+                //MediaScannerConnection.scanFile(context, new String[]{imageFile.getPath()}, null, null);
+                Uri contentUri = Uri.fromFile(imageFile);
+                Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+                mediaScanIntent.setData(contentUri);
+                context.sendBroadcast(mediaScanIntent);
             } else {
                 throw new IOException("Directory creation failed");
             }

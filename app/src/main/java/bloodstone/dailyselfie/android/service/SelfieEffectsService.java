@@ -36,6 +36,9 @@ public class SelfieEffectsService extends IntentService {
         if(userId!=null){
             try {
                 File f=EffectsHelper.applyEffect(this,imageId,userId,effectType);
+                if(f.exists()){
+                    //
+                }
                 Log.v("Done",f.getAbsolutePath());
             } catch (IOException e) {
                 Log.e("ERROR",e.toString());
