@@ -11,14 +11,16 @@ import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 
 
 import java.lang.ref.WeakReference;
 
+import bloodstone.dailyselfie.android.service.SelfieEffectsService;
 import bloodstone.dailyselfie.android.utils.PhotoUtils;
 
-public class SelfieDetailsActivity extends AppCompatActivity {
+public class SelfieDetailsActivity extends AppCompatActivity implements View.OnClickListener {
 
     static private final String EXTRA_IMAGE_ID = "image_id";
     static private final String EXTRA_SELFIE_TYPE = "selfie_type";
@@ -26,6 +28,7 @@ public class SelfieDetailsActivity extends AppCompatActivity {
 
     private ImageView mSelfieImage;
     private int mImageId;
+    private String mUserId;
     private WeakReference<Bitmap> mBitmap;
 
     @Override
@@ -48,6 +51,7 @@ public class SelfieDetailsActivity extends AppCompatActivity {
             public void run() {
                 if (getIntent().hasExtra(EXTRA_IMAGE_ID)) {
                     mImageId = getIntent().getIntExtra(EXTRA_IMAGE_ID, -1);
+                    mUserId=getIntent().getStringExtra(EXTRA_USER_ID);
                     if (mImageId != -1) {
                         Bitmap bmp = PhotoUtils.getSelfieDetails(SelfieDetailsActivity.this, mImageId, mSelfieImage.getMeasuredWidth(),
                                 mSelfieImage.getMeasuredHeight());
@@ -71,22 +75,8 @@ public class SelfieDetailsActivity extends AppCompatActivity {
             }
         });
 
-
-
-
-        /*if(getIntent().hasExtra(EXTRA_IMAGE_ID)){
-            mImageId=getIntent().getIntExtra(EXTRA_IMAGE_ID,-1);
-            if(mImageId!=-1){
-                Uri imageUri= ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,mImageId);
-                try {
-                    InputStream stream=getContentResolver().openInputStream(imageUri);
-                    Bitmap bmp= BitmapFactory.decodeStream(stream);
-                    mSelfieImage.setImageBitmap(bmp);
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }
-            }
-        }*/
+        View btnBlackWhite=findViewById(R.id.black_white_button);
+        btnBlackWhite.setOnClickListener(this);
 
     }
 
@@ -102,5 +92,15 @@ public class SelfieDetailsActivity extends AppCompatActivity {
         intent.putExtra(EXTRA_SELFIE_TYPE, selfieType);
         intent.putExtra(EXTRA_USER_ID,userId);
         return intent;
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch(v.getId()){
+            case R.id.black_white_button:
+                Intent serviceIntent= SelfieEffectsService.makeServiceIntent(this,mImageId,mUserId,PhotoUtils.EFFECT_BLACK_WHITE);
+                startService(serviceIntent);
+                break;
+        }
     }
 }

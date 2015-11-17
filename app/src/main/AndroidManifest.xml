@@ -36,6 +36,11 @@
         </activity>
         <activity android:name=".SelfieDetailsActivity" >
         </activity>
+
+        <service android:name="bloodstone.dailyselfie.android.service.SelfieEffectsService"
+            android:exported="false">
+
+        </service>
     </application>
 
 </manifest>

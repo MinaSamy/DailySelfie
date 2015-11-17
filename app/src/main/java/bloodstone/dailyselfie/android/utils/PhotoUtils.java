@@ -29,9 +29,14 @@ public class PhotoUtils {
 
     static public final int PHOTO_TYPE_NORMAL_SELFIE = 0;
     static public final int PHOTO_TYPE_EFFECTS_SELFIE = 1;
-    static private String DIR_SELFIES = "Daily Selfies";
-    static private String DIR_NORMAL_SELFIES = "Selfies";
-    static private String DIR_EFFECTS_SELFIES = "Selfies Effects";
+    static private final String DIR_SELFIES = "Daily Selfies";
+    static private final String DIR_NORMAL_SELFIES = "Selfies";
+    static private final String DIR_EFFECTS_SELFIES = "Selfies Effects";
+
+    //effects
+    static public final int EFFECT_BLACK_WHITE=3;
+    static public final int EFFECT_COMIC=2;
+    static public final int EFFECT_TINT=1;
 
 
     static public final String ANON_USER = "anon_user";
@@ -42,7 +47,7 @@ public class PhotoUtils {
      * @return
      * @throws IOException
      */
-    static private File createImageFile(Context context, String userId, int selfieType) throws IOException {
+    static public File createImageFile(Context context, String userId, int selfieType) throws IOException {
         File imageFile = null;
         //check the external storage state
         String state = Environment.getExternalStorageState();

@@ -28,9 +28,10 @@ public class AuthenticationHelper {
 
     private static final String TAG=AuthenticationHelper.class.getName();
 
-    private static final String BASE_URL = "http://dailyselfiecloud-env.elasticbeanstalk.com/";
+    public static final String BASE_URL = "http://dailyselfiecloud-env.elasticbeanstalk.com/";
     private static final String URL_LOGIN = BASE_URL + "login";
     private static final String URL_REGISTER=BASE_URL+"register";
+
 
     private static final String HEADER_USER_NAME="username";
     private static final String HEADER_PASSWORD="password";
