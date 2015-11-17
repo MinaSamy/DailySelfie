@@ -24,7 +24,7 @@ public class PostMultiPart {
 
         int bytesRead, bytesAvailable, bufferSize;
         byte[] buffer;
-        int maxBufferSize = 10 * 1024 * 1024;
+        int maxBufferSize = 1 * 1024 * 1024;
 
         /*String[] q = filepath.split("/");
         int idx = q.length - 1;*/

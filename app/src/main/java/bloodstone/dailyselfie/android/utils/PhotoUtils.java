@@ -110,6 +110,23 @@ public class PhotoUtils {
         return null;
     }
 
+    static public long getMediaId(Context context, String filePath){
+        long id=-1;
+        String []projection=new String[]{MediaStore.Images.Media._ID};
+        String selection = MediaStore.Images.Media.DATA+"=?";
+        String [] selectionArgs=new String[]{filePath};
+
+
+
+        Cursor cursor=context.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+        ,projection,selection,selectionArgs,null);
+        if(cursor.moveToFirst()){
+            id=cursor.getInt(cursor.getColumnIndex(MediaStore.Images.Media._ID));
+        }
+        cursor.close();
+        return id;
+    }
+
 
     static public CursorLoader getImageFileCursorLoader(Context context, String userId, int selfieType) {
         String selection = MediaStore.Images.Media.DATA + " LIKE ? AND " + MediaStore.Images.Media.SIZE + ">0";

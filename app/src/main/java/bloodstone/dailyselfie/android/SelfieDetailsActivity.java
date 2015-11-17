@@ -27,7 +27,7 @@ public class SelfieDetailsActivity extends AppCompatActivity implements View.OnC
     static private final String EXTRA_USER_ID="user_id";
 
     private ImageView mSelfieImage;
-    private int mImageId;
+    private long mImageId;
     private String mUserId;
     private WeakReference<Bitmap> mBitmap;
 
@@ -50,7 +50,7 @@ public class SelfieDetailsActivity extends AppCompatActivity implements View.OnC
             @Override
             public void run() {
                 if (getIntent().hasExtra(EXTRA_IMAGE_ID)) {
-                    mImageId = getIntent().getIntExtra(EXTRA_IMAGE_ID, -1);
+                    mImageId = getIntent().getLongExtra(EXTRA_IMAGE_ID, -1);
                     mUserId=getIntent().getStringExtra(EXTRA_USER_ID);
                     if (mImageId != -1) {
                         Bitmap bmp = PhotoUtils.getSelfieDetails(SelfieDetailsActivity.this, mImageId, mSelfieImage.getMeasuredWidth(),
@@ -86,7 +86,7 @@ public class SelfieDetailsActivity extends AppCompatActivity implements View.OnC
         super.onDestroy();
     }
 
-    static public Intent makeIntent(Context context, int imageId, int selfieType,String userId) {
+    static public Intent makeIntent(Context context, long imageId, int selfieType,String userId) {
         Intent intent = new Intent(context, SelfieDetailsActivity.class);
         intent.putExtra(EXTRA_IMAGE_ID, imageId);
         intent.putExtra(EXTRA_SELFIE_TYPE, selfieType);

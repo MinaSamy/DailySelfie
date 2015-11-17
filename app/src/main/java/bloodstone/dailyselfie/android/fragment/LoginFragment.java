@@ -107,7 +107,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Tex
             }
         }*/
 
-       /* Thread t=new Thread(new Runnable() {
+       /*Thread t=new Thread(new Runnable() {
             @Override
             public void run() {
                 PhotoUtils cam=new PhotoUtils();

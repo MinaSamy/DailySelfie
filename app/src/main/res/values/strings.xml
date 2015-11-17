@@ -38,5 +38,9 @@
     <string name="action_settings">Settings</string>
     <string name="try_again">Please try again</string>
     <string name="section_format">Hello World from section: %1$d</string>
-    <string name="black_white">Black and White</string>
+    <string name="black_white">Black and White Effect</string>
+    <string name="tint_effect">Tint Effect</string>
+    <string name="comic_effect">Comic Effect</string>
+    <string name="applying">Applying\u0020</string>
+    <string name="applying_done">Done Applying Effects</string>
 </resources>

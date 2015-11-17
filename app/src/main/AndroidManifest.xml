@@ -34,7 +34,7 @@
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBar" >
         </activity>
-        <activity android:name=".SelfieDetailsActivity" >
+        <activity android:name=".SelfieDetailsActivity">
         </activity>
 
         <service android:name="bloodstone.dailyselfie.android.service.SelfieEffectsService"
