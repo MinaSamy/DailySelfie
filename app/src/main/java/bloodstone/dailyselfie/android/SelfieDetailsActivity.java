@@ -78,6 +78,12 @@ public class SelfieDetailsActivity extends AppCompatActivity implements View.OnC
         View btnBlackWhite=findViewById(R.id.black_white_button);
         btnBlackWhite.setOnClickListener(this);
 
+        View tintButton=findViewById(R.id.tint_effect);
+        tintButton.setOnClickListener(this);
+
+        View btnComic=findViewById(R.id.comic_button);
+        btnComic.setOnClickListener(this);
+
     }
 
 
@@ -91,9 +97,18 @@ public class SelfieDetailsActivity extends AppCompatActivity implements View.OnC
 
     @Override
     public void onClick(View v) {
+        Intent serviceIntent;
         switch(v.getId()){
             case R.id.black_white_button:
-                Intent serviceIntent= SelfieEffectsService.makeServiceIntent(this,mImageId,mUserId,PhotoUtils.EFFECT_BLACK_WHITE);
+                serviceIntent= SelfieEffectsService.makeServiceIntent(this,mImageId,mUserId,PhotoUtils.EFFECT_BLACK_WHITE);
+                startService(serviceIntent);
+                break;
+            case R.id.comic_button:
+                serviceIntent= SelfieEffectsService.makeServiceIntent(this,mImageId,mUserId,PhotoUtils.EFFECT_COMIC);
+                startService(serviceIntent);
+                break;
+            case R.id.tint_effect:
+                serviceIntent= SelfieEffectsService.makeServiceIntent(this,mImageId,mUserId,PhotoUtils.EFFECT_TINT);
                 startService(serviceIntent);
                 break;
         }
