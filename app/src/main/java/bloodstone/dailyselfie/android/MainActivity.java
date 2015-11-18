@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //overridePendingTransition(R.anim.activity_open_translate,R.anim.activity_close_translate);
+        overridePendingTransition(R.anim.activity_open_translate,R.anim.activity_close_translate);
 
         setContentView(R.layout.activity_main);
 
