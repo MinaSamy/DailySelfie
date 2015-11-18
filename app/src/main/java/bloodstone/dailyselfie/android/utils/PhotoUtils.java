@@ -189,6 +189,7 @@ public class PhotoUtils {
             options.inSampleSize=calculateInSampleSize(options,targetWidth,targetHeight);
 
             options.inJustDecodeBounds=false;
+            options.inPreferredConfig= Bitmap.Config.ARGB_8888;
             stream=context.getContentResolver().openInputStream(imageUri);
             bmp= BitmapFactory.decodeStream(stream, null, options);
 

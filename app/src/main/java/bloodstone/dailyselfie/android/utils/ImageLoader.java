@@ -36,6 +36,8 @@ public class ImageLoader {
                 BitmapFactory.Options bmOptions = new BitmapFactory.Options();
                 bmOptions.inSampleSize =8;
 
+
+
                 final Bitmap map=MediaStore.Images.Thumbnails.getThumbnail(imageView.getContext().getContentResolver(),
                         imageId, MediaStore.Images.Thumbnails.MINI_KIND, bmOptions);
                 if(map!=null){

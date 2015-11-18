@@ -80,11 +80,6 @@ public class SelfieDetailsActivity extends AppCompatActivity implements View.OnC
 
     }
 
-    @Override
-    protected void onDestroy() {
-        mSelfieImage.setImageBitmap(null);
-        super.onDestroy();
-    }
 
     static public Intent makeIntent(Context context, long imageId, int selfieType,String userId) {
         Intent intent = new Intent(context, SelfieDetailsActivity.class);
