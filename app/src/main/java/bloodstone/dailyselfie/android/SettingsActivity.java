@@ -46,20 +46,20 @@ import bloodstone.dailyselfie.android.utils.TimePreference;
  */
 public class SettingsActivity extends AppCompatPreferenceActivity {
     static private final String EXTRA_USER_ID = "user_id";
-    private String ss;
     private static PendingIntent alarmIntent;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        String userId=getIntent().getStringExtra(EXTRA_USER_ID);
 //Intent intent= MainActivity.makeMainActivityIntent(getContext(),"user1");
-        Intent intent = new Intent(this, AlarmReceiver.class);
+        Intent intent = AlarmReceiver.makeIntent(this,userId);
         alarmIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
     }
 
 
-    static Intent makeIntent(Context context, String userId) {
+    static public Intent makeIntent(Context context, String userId) {
         Intent intent = new Intent(context, SettingsActivity.class);
         intent.putExtra(EXTRA_USER_ID, userId);
         return intent;
