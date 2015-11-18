@@ -53,7 +53,7 @@ public class SelfieAdapter extends RecyclerView.Adapter<SelfieAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        if (mCursor.moveToPosition(position)) {
+        if (mCursor!=null && mCursor.moveToPosition(position)) {
             int imageId = mCursor.getInt(mCursor.getColumnIndex(MediaStore.Images.Media._ID));
             holder.setImage(mCursor);
         }
@@ -71,6 +71,13 @@ public class SelfieAdapter extends RecyclerView.Adapter<SelfieAdapter.ViewHolder
     @Override
     public void setHasStableIds(boolean hasStableIds) {
         super.setHasStableIds(true);
+    }
+
+    public void changeCursor(Cursor cursor) {
+        Cursor old = swapCursor(cursor);
+        if (old != null) {
+            old.close();
+        }
     }
 
     public Cursor swapCursor(Cursor newCursor) {
@@ -108,7 +115,7 @@ public class SelfieAdapter extends RecyclerView.Adapter<SelfieAdapter.ViewHolder
             view.setOnClickListener(this);
             mTxtTitle = (TextView) view.findViewById(R.id.selfie_title);
             mImg = (ImageView) view.findViewById(R.id.selfie_image);
-
+            setIsRecyclable(true);
 
 
         }
@@ -118,8 +125,11 @@ public class SelfieAdapter extends RecyclerView.Adapter<SelfieAdapter.ViewHolder
         }*/
 
         public void setImage(Cursor cursor) {
-            mImageLoader.displayImage(mCursor, this.mImg, this.mTxtTitle);
+           mImageLoader.displayImage(mCursor, this.mImg, this.mTxtTitle);
+            //mTxtTitle.setText("aaa");
         }
+
+
 
         /*public void setTag(){
             this.getItemId()

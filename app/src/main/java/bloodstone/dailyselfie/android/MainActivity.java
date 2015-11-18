@@ -26,6 +26,7 @@ import java.io.IOException;
 
 import bloodstone.dailyselfie.android.adapter.MainPagerAdapter;
 import bloodstone.dailyselfie.android.fragment.PhotosFragment;
+import bloodstone.dailyselfie.android.utils.LogUtil;
 import bloodstone.dailyselfie.android.utils.PhotoUtils;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -114,7 +115,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(final View v) {
-        final Handler handler=new Handler(){
+        /*final Handler handler=new Handler(){
             @Override
             public void handleMessage(Message msg) {
                 if(msg.arg1==-1){
@@ -127,30 +128,35 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
 
             }
-        };
+        };*/
 
-        Thread t=new Thread(new Runnable() {
-            @Override
-            public void run() {
-                Message message=handler.obtainMessage();
-                try {
-                    //TODO retrieve correct user id from login/registration API
-                    Intent intent= PhotoUtils.makeCameraCaptureIntent(MainActivity.this, CAMERA_CAPTURE_REQUEST_CODE,
-                            "user1", PhotoUtils.PHOTO_TYPE_NORMAL_SELFIE);
-                    if(intent!=null){
-                        message=handler.obtainMessage();
-                        message.obj=intent;
-                    }
-                    else{
-                        message.arg1=-1;
-                    }
-                } catch (IOException e) {
-                    message.arg1=-2;
-                }finally {
-                    message.sendToTarget();
-                }
+        //Message message=handler.obtainMessage();
+        try {
+            //TODO retrieve correct user id from login/registration API
+            Intent intent= PhotoUtils.makeCameraCaptureIntent(CAMERA_CAPTURE_REQUEST_CODE,
+                    mUserId, PhotoUtils.PHOTO_TYPE_NORMAL_SELFIE);
+            if(intent.resolveActivity(getPackageManager()) != null){
+                startActivityForResult(intent,CAMERA_CAPTURE_REQUEST_CODE);
             }
-        });
-        t.start();
+
+
+        } catch (IOException e) {
+            LogUtil.logError("MainActivity",e.toString());
+        }catch (Exception ex){
+            LogUtil.logError("MainActivity",ex.toString());
+        }
+        finally {
+            //message.sendToTarget();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == CAMERA_CAPTURE_REQUEST_CODE && resultCode == RESULT_OK) {
+            if(data!=null &&data.getData()!=null){
+                Log.e("DATA",data.getData().toString());
+            }
+        }
     }
 }

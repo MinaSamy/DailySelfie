@@ -99,13 +99,13 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Tex
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.sign_in_button) {
+        /*if (v.getId() == R.id.sign_in_button) {
             login();
         }else if(v.getId()==R.id.btnSignUp){
             if(mListener!=null){
                 mListener.navigateToSignUp();
             }
-        }
+        }*/
 
       /*Thread t=new Thread(new Runnable() {
             @Override
@@ -115,8 +115,8 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Tex
             }
         });
         t.start();*/
-        /*Intent intent=MainActivity.makeMainActivityIntent(getActivity(),"user1");
-        startActivity(intent);*/
+        Intent intent=MainActivity.makeMainActivityIntent(getActivity(),"user1");
+        startActivity(intent);
     }
 
     @Override

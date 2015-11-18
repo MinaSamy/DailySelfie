@@ -1,6 +1,7 @@
 package bloodstone.dailyselfie.android.utils;
 
 import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -47,7 +48,7 @@ public class PhotoUtils {
      * @return
      * @throws IOException
      */
-    static public File createImageFile(Context context, String userId, int selfieType) throws IOException {
+    static public File createImageFile(String userId, int selfieType) throws IOException {
         File imageFile = null;
         //check the external storage state
         String state = Environment.getExternalStorageState();
@@ -68,16 +69,24 @@ public class PhotoUtils {
             }
 
             if (directoryExists) {
-                imageFile = File.createTempFile(fileName, ".jpg", storageDir);
+                /*imageFile = File.createTempFile(fileName, ".jpg", storageDir);
                 imageFile.setWritable(true, false);
-                //imageFile.setExecutable(true,false);
-                imageFile.setReadable(true, false);
+
+                imageFile.setReadable(true, false);*/
+
+                imageFile=new File(storageDir,fileName+".jpg");
 
                 //MediaScannerConnection.scanFile(context, new String[]{imageFile.getPath()}, null, null);
-                Uri contentUri = Uri.fromFile(imageFile);
+                /*Uri contentUri = Uri.fromFile(imageFile);
                 Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
                 mediaScanIntent.setData(contentUri);
-                context.sendBroadcast(mediaScanIntent);
+                context.sendBroadcast(mediaScanIntent);*/
+
+                /*ContentValues values = new ContentValues();
+                values.put(MediaStore.Images.Media.DATA,imageFile.getPath());
+                values.put(MediaStore.Images.Media.MIME_TYPE,"image/jpeg");
+                context.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,values);*/
+
             } else {
                 throw new IOException("Directory creation failed");
             }
@@ -96,17 +105,17 @@ public class PhotoUtils {
      * @param selfieType
      * @return
      */
-    static public Intent makeCameraCaptureIntent(Context context, int requestCode, String userId, int selfieType) throws IOException {
+    static public Intent makeCameraCaptureIntent(int requestCode, String userId, int selfieType) throws IOException {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (intent.resolveActivity(context.getPackageManager()) != null) {
-            File photoFile = createImageFile(context, userId, selfieType);
+
+            File photoFile = createImageFile(userId, selfieType);
             if (photoFile != null) {
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
                 intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
                 intent.putExtra("file", photoFile.getAbsolutePath());
                 return intent;
             }
-        }
+
         return null;
     }
 

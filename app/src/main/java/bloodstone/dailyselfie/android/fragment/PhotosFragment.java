@@ -36,7 +36,7 @@ public class PhotosFragment extends Fragment implements LoaderManager.LoaderCall
     static private final String ARG_USER_ID = "user_id";
 
     private Cursor mImageFileCursor;
-    static private final int IMAGE_FILE_LOADER_ID = 0;
+    static private final int IMAGE_FILE_LOADER_ID = 100;
 
     //widgets
     private RecyclerView mRecyclerView;
@@ -56,11 +56,11 @@ public class PhotosFragment extends Fragment implements LoaderManager.LoaderCall
     }
 
 
-    @Override
+    /*@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-    }
+    }*/
 
 
     @Override
@@ -82,15 +82,21 @@ public class PhotosFragment extends Fragment implements LoaderManager.LoaderCall
         }
 
 
-        getLoaderManager().initLoader(IMAGE_FILE_LOADER_ID, null, this);
+        if(getLoaderManager()!=null){
+            getLoaderManager().initLoader(IMAGE_FILE_LOADER_ID, null, this);
+        }
+
 
         return v;
     }
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        CursorLoader loader = PhotoUtils.getImageFileCursorLoader(getActivity(), mUserId, mSelfieType);
-        return loader;
+        if(id==IMAGE_FILE_LOADER_ID){
+            CursorLoader loader = PhotoUtils.getImageFileCursorLoader(getActivity(), mUserId, mSelfieType);
+            return loader;
+        }
+        return null;
     }
 
     @Override
@@ -103,8 +109,9 @@ public class PhotosFragment extends Fragment implements LoaderManager.LoaderCall
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        //swap cursor adapter
-        mAdapter.swapCursor(null);
+
+        //mAdapter.swapCursor(null);
+        mAdapter.changeCursor(null);
     }
 
     @Override

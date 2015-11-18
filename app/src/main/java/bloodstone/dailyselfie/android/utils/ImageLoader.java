@@ -22,7 +22,7 @@ public class ImageLoader {
     private Calendar mCalendar;
 
     public ImageLoader(){
-        mExecutorService= Executors.newFixedThreadPool(3);
+        mExecutorService= Executors.newFixedThreadPool(5);
         mSdf=new SimpleDateFormat("EEE, MMM d, yyyy h:mm a");
         mCalendar=Calendar.getInstance();
     }
@@ -42,7 +42,7 @@ public class ImageLoader {
                 //txt.setText(title);
                 int imageId=cursor.getInt(cursor.getColumnIndex(MediaStore.Images.Media._ID));
                 BitmapFactory.Options bmOptions = new BitmapFactory.Options();
-                bmOptions.inSampleSize =8;
+                bmOptions.inSampleSize =10;
 
 
 
