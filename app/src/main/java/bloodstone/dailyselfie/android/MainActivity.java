@@ -133,7 +133,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //Message message=handler.obtainMessage();
         try {
             //TODO retrieve correct user id from login/registration API
-            Intent intent= PhotoUtils.makeCameraCaptureIntent(CAMERA_CAPTURE_REQUEST_CODE,
+            Intent intent= PhotoUtils.makeCameraCaptureIntent(this,CAMERA_CAPTURE_REQUEST_CODE,
                     mUserId, PhotoUtils.PHOTO_TYPE_NORMAL_SELFIE);
             if(intent.resolveActivity(getPackageManager()) != null){
                 startActivityForResult(intent,CAMERA_CAPTURE_REQUEST_CODE);

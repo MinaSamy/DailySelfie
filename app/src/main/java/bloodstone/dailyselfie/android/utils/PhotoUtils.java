@@ -48,7 +48,7 @@ public class PhotoUtils {
      * @return
      * @throws IOException
      */
-    static public File createImageFile(String userId, int selfieType) throws IOException {
+    static public File createImageFile(Context context,String userId, int selfieType) throws IOException {
         File imageFile = null;
         //check the external storage state
         String state = Environment.getExternalStorageState();
@@ -82,9 +82,12 @@ public class PhotoUtils {
                 mediaScanIntent.setData(contentUri);
                 context.sendBroadcast(mediaScanIntent);*/
 
+                MediaScannerConnection.scanFile(context, new String[] { imageFile.getPath() }, new String[] { "image/jpeg" }, null);
+
                 /*ContentValues values = new ContentValues();
                 values.put(MediaStore.Images.Media.DATA,imageFile.getPath());
                 values.put(MediaStore.Images.Media.MIME_TYPE,"image/jpeg");
+
                 context.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,values);*/
 
             } else {
@@ -105,10 +108,9 @@ public class PhotoUtils {
      * @param selfieType
      * @return
      */
-    static public Intent makeCameraCaptureIntent(int requestCode, String userId, int selfieType) throws IOException {
+    static public Intent makeCameraCaptureIntent(Context context, int requestCode, String userId, int selfieType) throws IOException {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-
-            File photoFile = createImageFile(userId, selfieType);
+            File photoFile = createImageFile(context,userId, selfieType);
             if (photoFile != null) {
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
                 intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);

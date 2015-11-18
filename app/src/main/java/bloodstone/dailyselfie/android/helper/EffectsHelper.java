@@ -44,7 +44,7 @@ public class EffectsHelper {
         byte[] result = bos.toByteArray();
 
 
-        File effectsFile = PhotoUtils.createImageFile(userId, PhotoUtils.PHOTO_TYPE_EFFECTS_SELFIE);
+        File effectsFile = PhotoUtils.createImageFile(context, userId, PhotoUtils.PHOTO_TYPE_EFFECTS_SELFIE);
         FileOutputStream fos = new FileOutputStream(effectsFile);
         fos.write(result);
         //fos.flush();
