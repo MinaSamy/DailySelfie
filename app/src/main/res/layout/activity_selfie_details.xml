@@ -25,10 +25,22 @@
         android:layout_weight="1">
 
         <Button
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-
+            android:layout_weight="1"
             android:id="@+id/black_white_button"
             android:text="@string/black_white"/>
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:id="@+id/comic_button"
+            android:text="@string/comic_effect"/>
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:id="@+id/tint_effect"
+            android:text="@string/tint_effect"/>
     </LinearLayout>
 </LinearLayout>
