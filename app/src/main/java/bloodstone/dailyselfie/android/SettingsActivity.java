@@ -2,6 +2,8 @@ package bloodstone.dailyselfie.android;
 
 
 import android.annotation.TargetApi;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -13,6 +15,7 @@ import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
+import android.preference.SwitchPreference;
 import android.support.v7.app.ActionBar;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
@@ -27,6 +30,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 
+import bloodstone.dailyselfie.android.Receiver.AlarmReceiver;
 import bloodstone.dailyselfie.android.utils.TimePreference;
 
 /**
@@ -41,10 +45,24 @@ import bloodstone.dailyselfie.android.utils.TimePreference;
  * API Guide</a> for more information on developing a Settings UI.
  */
 public class SettingsActivity extends AppCompatPreferenceActivity {
+    static private final String EXTRA_USER_ID = "user_id";
+    private String ss;
+    private static PendingIntent alarmIntent;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+//Intent intent= MainActivity.makeMainActivityIntent(getContext(),"user1");
+        Intent intent = new Intent(this, AlarmReceiver.class);
+        alarmIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
+    }
 
+
+    static Intent makeIntent(Context context, String userId) {
+        Intent intent = new Intent(context, SettingsActivity.class);
+        intent.putExtra(EXTRA_USER_ID, userId);
+        return intent;
     }
 
     /**
@@ -102,6 +120,9 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
      * to reflect its new value.
      */
     private static Preference.OnPreferenceChangeListener sBindPreferenceSummaryToValueListener = new Preference.OnPreferenceChangeListener() {
+
+    private boolean isReminderEnabled=false;
+
         @Override
         public boolean onPreferenceChange(Preference preference, Object value) {
             String stringValue = value.toString();
@@ -119,24 +140,34 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                                 : null);
 
             }
-            else if(preference instanceof TimePreference){
-                if(!TextUtils.isEmpty(stringValue)){
-                    long time=Long.parseLong(stringValue);
-                    Calendar calendar=Calendar.getInstance();
-                    calendar.setTimeInMillis(time);
-                    SimpleDateFormat sdf=new SimpleDateFormat("h:mm a");
-                    preference.setSummary(sdf.format(calendar.getTime()));
-                }
+            else if(preference instanceof SwitchPreference &&preference.getKey().equals("notifications_new_message")){
+                isReminderEnabled=Boolean.parseBoolean(stringValue);
             }
-            else if (preference instanceof RingtonePreference) {
+            else if (preference instanceof TimePreference) {
+
+                if (!TextUtils.isEmpty(stringValue) &&isReminderEnabled) {
+                    long time = Long.parseLong(stringValue);
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.setTimeInMillis(time);
+                    SimpleDateFormat sdf = new SimpleDateFormat("h:mm a");
+                    preference.setSummary(sdf.format(calendar.getTime()));
+
+                    //set the alarm
+                    AlarmManager mngr = (AlarmManager)preference.getContext().getSystemService(Context.ALARM_SERVICE);
+                    mngr.setInexactRepeating(AlarmManager.RTC, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, alarmIntent);
+                }else{
+                    AlarmManager mngr = (AlarmManager)preference.getContext().getSystemService(Context.ALARM_SERVICE);
+                    mngr.cancel(alarmIntent);
+                }
+
+            } else if (preference instanceof RingtonePreference) {
                 // For ringtone preferences, look up the correct display value
                 // using RingtoneManager.
                 if (TextUtils.isEmpty(stringValue)) {
                     // Empty values correspond to 'silent' (no ringtone).
                     preference.setSummary(R.string.pref_ringtone_silent);
 
-                }
-                else {
+                } else {
                     Ringtone ringtone = RingtoneManager.getRingtone(
                             preference.getContext(), Uri.parse(stringValue));
 
@@ -210,6 +241,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             // guidelines.
             bindPreferenceSummaryToValue(findPreference("example_text"));
             bindPreferenceSummaryToValue(findPreference("example_list"));
+            findPreference("example_text").setDefaultValue("");
         }
 
         @Override
@@ -240,6 +272,21 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             // updated to reflect the new value, per the Android Design
             // guidelines.
             bindPreferenceSummaryToValue(findPreference("notifications_new_message_ringtone"));
+
+
+            findPreference("notifications_new_message").setOnPreferenceChangeListener(sBindPreferenceSummaryToValueListener);
+
+            // Trigger the listener immediately with the preference's
+            // current value.
+
+            boolean val=PreferenceManager
+                    .getDefaultSharedPreferences(findPreference("notifications_new_message").getContext())
+            .getBoolean(findPreference("notifications_new_message").getKey(),false);
+            sBindPreferenceSummaryToValueListener.onPreferenceChange(findPreference("notifications_new_message"),
+                    PreferenceManager
+                            .getDefaultSharedPreferences(findPreference("notifications_new_message").getContext())
+                            .getString(String.valueOf(val),"false"));
+
             bindPreferenceSummaryToValue(findPreference("notifications_time"));
         }
 

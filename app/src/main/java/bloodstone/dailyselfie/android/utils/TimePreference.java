@@ -1,7 +1,10 @@
 package bloodstone.dailyselfie.android.utils;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.preference.DialogPreference;
 import android.text.TextUtils;
@@ -12,7 +15,9 @@ import android.widget.TimePicker;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+import bloodstone.dailyselfie.android.MainActivity;
 import bloodstone.dailyselfie.android.R;
+import bloodstone.dailyselfie.android.Receiver.AlarmReceiver;
 
 /**
  * Created by minsamy on 11/18/2015.
@@ -33,6 +38,8 @@ public class TimePreference extends DialogPreference {
             SimpleDateFormat sdf = new SimpleDateFormat("h:mm a");
             setSummary(sdf.format(calendar.getTime()));
         }
+
+
     }
 
     @Override
@@ -76,6 +83,7 @@ public class TimePreference extends DialogPreference {
             c.set(Calendar.MILLISECOND, 0);
             persistString(String.valueOf(c.getTimeInMillis()));
             callChangeListener(String.valueOf(c.getTimeInMillis()));
+
 
 
         }
