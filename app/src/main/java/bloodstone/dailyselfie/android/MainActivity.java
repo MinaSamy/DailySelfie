@@ -3,12 +3,13 @@ package bloodstone.dailyselfie.android;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
+
 import android.os.Handler;
 import android.os.Message;
-import android.provider.MediaStore;
+
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
+
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -52,7 +53,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        overridePendingTransition(R.anim.activity_open_translate,R.anim.activity_close_translate);
+        //overridePendingTransition(R.anim.activity_open_translate,R.anim.activity_close_translate);
 
         setContentView(R.layout.activity_main);
 
@@ -75,6 +76,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(this);
+
+
     }
 
 

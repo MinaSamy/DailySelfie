@@ -51,7 +51,11 @@ public class LoginActivity extends AppCompatActivity implements LoginFragment.On
     @Override
     public void onLoginComplete(LoginResponse response) {
         if(response.isAuthenticated()){
-            //TODO navigate to next view
+            //Dummy user accounts navigate to next view
+            String userId=response.getUserId().split("@")[0].replace(" ","");
+            Intent mainActivityIntent=MainActivity.makeMainActivityIntent(this,userId);
+            mainActivityIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(mainActivityIntent);
         }
     }
 
@@ -80,8 +84,9 @@ public class LoginActivity extends AppCompatActivity implements LoginFragment.On
     public void onRegistrationComplete(boolean result) {
         if(result){
             //Navigate to main activity
-            Intent intent=new Intent(this,MainActivity.class);
+            Intent intent=MainActivity.makeMainActivityIntent(this,"user1");
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
             startActivity(intent);
         }else{
             Snackbar.make(mFragmentContainer,R.string.try_again,Snackbar.LENGTH_LONG).show();

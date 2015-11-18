@@ -108,14 +108,14 @@ public class SelfieAdapter extends RecyclerView.Adapter<SelfieAdapter.ViewHolder
             view.setOnClickListener(this);
             mTxtTitle = (TextView) view.findViewById(R.id.selfie_title);
             mImg = (ImageView) view.findViewById(R.id.selfie_image);
-            setIsRecyclable(true);
+
 
 
         }
 
-        public Context getContext() {
+        /*public Context getContext() {
             return mTxtTitle.getContext();
-        }
+        }*/
 
         public void setImage(Cursor cursor) {
             mImageLoader.displayImage(mCursor, this.mImg, this.mTxtTitle);
@@ -129,7 +129,7 @@ public class SelfieAdapter extends RecyclerView.Adapter<SelfieAdapter.ViewHolder
         @Override
         public void onClick(View v) {
             if (mCursor.moveToPosition(getAdapterPosition())) {
-                int imageId = mCursor.getInt(mCursor.getColumnIndex(MediaStore.Images.Media._ID));
+                long imageId = mCursor.getLong(mCursor.getColumnIndex(MediaStore.Images.Media._ID));
                 if (mOnRecyclerViewItemClickListener != null) {
                     mOnRecyclerViewItemClickListener.onRecyclerViewItemClick(imageId);
                 }
@@ -140,7 +140,7 @@ public class SelfieAdapter extends RecyclerView.Adapter<SelfieAdapter.ViewHolder
 
 
     public interface OnRecyclerViewItemClickListener {
-        void onRecyclerViewItemClick(int itemId);
+        void onRecyclerViewItemClick(long itemId);
     }
 
 

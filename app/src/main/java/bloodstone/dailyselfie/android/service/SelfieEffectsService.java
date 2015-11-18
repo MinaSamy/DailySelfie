@@ -139,11 +139,11 @@ public class SelfieEffectsService extends IntentService {
                 .setProgress(0, 0, false);
 
 
-        long imageId=PhotoUtils.getMediaId(this,file.getPath());
+        //long imageId=PhotoUtils.getMediaId(this,file.getAbsolutePath());
 
 
 
-        Intent resultIntent= SelfieDetailsActivity.makeIntent(this, imageId, effectType, userId);
+        Intent resultIntent= MainActivity.makeMainActivityIntent(this,userId);
 
         //construct the task stack to maintain the back button functionality
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);

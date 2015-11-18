@@ -130,6 +130,7 @@ public class PhotoUtils {
 
     static public CursorLoader getImageFileCursorLoader(Context context, String userId, int selfieType) {
         String selection = MediaStore.Images.Media.DATA + " LIKE ? AND " + MediaStore.Images.Media.SIZE + ">0";
+        String []projection=new String[]{MediaStore.Images.Media._ID,MediaStore.Images.Media.TITLE,MediaStore.Images.Media.DATE_TAKEN};
         String args = null;
         if (selfieType == PHOTO_TYPE_NORMAL_SELFIE) {
             args = "%" + DIR_SELFIES + File.separator + userId + File.separator + DIR_NORMAL_SELFIES + File.separator + "%";
@@ -137,8 +138,8 @@ public class PhotoUtils {
             args = "%" + DIR_SELFIES + File.separator + userId + File.separator + DIR_EFFECTS_SELFIES + File.separator + "%";
         }
         String[] selectionArgs = new String[]{args};
-        CursorLoader loader = new CursorLoader(context, MediaStore.Images.Media.EXTERNAL_CONTENT_URI, null,
-                selection, selectionArgs, null);
+        CursorLoader loader = new CursorLoader(context, MediaStore.Images.Media.EXTERNAL_CONTENT_URI, projection,
+                selection, selectionArgs,null);
         return loader;
     }
 

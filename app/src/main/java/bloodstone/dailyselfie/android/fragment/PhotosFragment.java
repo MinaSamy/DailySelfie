@@ -4,16 +4,22 @@ package bloodstone.dailyselfie.android.fragment;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
+
+
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
+
 
 import bloodstone.dailyselfie.android.R;
 import bloodstone.dailyselfie.android.SelfieDetailsActivity;
@@ -75,7 +81,9 @@ public class PhotosFragment extends Fragment implements LoaderManager.LoaderCall
             mUserId = getArguments().getString(ARG_USER_ID);
         }
 
+
         getLoaderManager().initLoader(IMAGE_FILE_LOADER_ID, null, this);
+
         return v;
     }
 
@@ -87,7 +95,10 @@ public class PhotosFragment extends Fragment implements LoaderManager.LoaderCall
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+
         mAdapter.swapCursor(data);
+
+
     }
 
     @Override
@@ -97,9 +108,9 @@ public class PhotosFragment extends Fragment implements LoaderManager.LoaderCall
     }
 
     @Override
-    public void onRecyclerViewItemClick(int itemId) {
+    public void onRecyclerViewItemClick(long itemId) {
         //Snackbar.make(mRecyclerView, String.valueOf(itemId), Snackbar.LENGTH_LONG).show();
-        Intent intent= SelfieDetailsActivity.makeIntent(getActivity(),itemId,mSelfieType,mUserId);
+        Intent intent = SelfieDetailsActivity.makeIntent(getActivity(), itemId, mSelfieType, mUserId);
         startActivity(intent);
     }
 }

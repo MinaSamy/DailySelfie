@@ -26,6 +26,7 @@ public class MainPagerAdapter extends FragmentPagerAdapter {
     @Override
     public Fragment getItem(int position) {
         if (position == 0) {
+
             return PhotosFragment.newInstance(PhotoUtils.PHOTO_TYPE_NORMAL_SELFIE,mUserId);
         }
         return PhotosFragment.newInstance(PhotoUtils.PHOTO_TYPE_EFFECTS_SELFIE,mUserId);
